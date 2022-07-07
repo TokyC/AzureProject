@@ -1,6 +1,7 @@
 import pymysql.cursors
 import streamlit as st
 import os
+import io
 from PIL import Image
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from msrest.authentication import CognitiveServicesCredentials
@@ -36,7 +37,13 @@ container_client = blob_service_client.get_container_client("container-azure-pro
 cnx = pymysql.connect(user="toky@tokyserver", password="Projet@Azure", host="tokyserver.mysql.database.azure.com",
                       port=3306, database="azureproj")
 ##############################################################
-# The title
+st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
+
+st.markdown("""
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #70f1ff;">
+  <img src="https://www.groupe-pomona.fr/sites/default/files/reseau/Logo%20PassionFroid.png">
+</nav>
+""", unsafe_allow_html=True)# The title
 st.title("Search engine for images with Azure infra")
 
 # Users can search image from here
@@ -51,46 +58,47 @@ if search is not None :
     st.write("text you typed : " + search)
 
 # Users can upload images from here
-uploaded_file = st.file_uploader("Upload an image", accept_multiple_files=False)
+uploaded_files = st.file_uploader("Upload an image",type=['jpg','jpeg','png'],help="Charger une image au format jpg,jpeg,png", accept_multiple_files=True)
 
-if uploaded_file is not None :
+if uploaded_files is not None :
     tags = []
     if st.button("Click to upload") :
         # for file in uploaded_file :
         # print(file)
-        with open(os.path.join("./image/", uploaded_file.name), "wb") as f :
-            f.write(uploaded_file.getbuffer())
-        # description = computervision_client.tag_image_in_stream("./image/" + str(uploaded_file.name) + ".png")
-        with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
-            # Create a blob client using the local file name as the name for the blob
-            blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
-                                                              blob=str(uploaded_file.name))
-            # upload the image in a the blob
-            res = blob_client.upload_blob(image_stream, overwrite=True)
+        for uploaded_file in uploaded_files: #Here begin the multiple images management
+            with open(os.path.join("./image/", uploaded_file.name), "wb") as f :
+                f.write(uploaded_file.getbuffer())
+            # description = computervision_client.tag_image_in_stream("./image/" + str(uploaded_file.name) + ".png")
+            with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
+                # Create a blob client using the local file name as the name for the blob
+                blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
+                                                                  blob=str(uploaded_file.name))
+                # upload the image in a the blob
+                res = blob_client.upload_blob(image_stream, overwrite=True)
 
-        with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
-            description = computervision_client.tag_image_in_stream(image_stream, language='fr')
-            blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
-                                                              blob=str(uploaded_file.name))
-            for tag in description.tags :
-                tags.append(tag.name)
-                # blob_client.set_blob_metadata(metadata={'tag' : 'test metadata','tag2':'metada2'})
-                print("adding tag :" + tag.name)
-                sql_query = f"INSERT INTO images (url,tags) VALUES ('{image_base_url + uploaded_file.name}', '{tag.name}');"
-                print(sql_query)
+            with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
+                description = computervision_client.tag_image_in_stream(image_stream, language='fr')
+                blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
+                                                                  blob=str(uploaded_file.name))
+                for tag in description.tags :
+                    tags.append(tag.name)
+                    # blob_client.set_blob_metadata(metadata={'tag' : 'test metadata','tag2':'metada2'})
+                    print("adding tag :" + tag.name)
+                    sql_query = f"INSERT INTO images (url,tags) VALUES ('{image_base_url + uploaded_file.name}', '{tag.name}');"
+                    print(sql_query)
 
-                with cnx.cursor() as cursor :
-                    cursor.execute(sql_query)
-                    cnx.commit()
-                    print("tag uploaded")
+                    with cnx.cursor() as cursor :
+                        cursor.execute(sql_query)
+                        cnx.commit()
+                        print("tag uploaded")
 
-            st.success("Upload Successfull")
-        # Deleting the file:
-        # check if file exists or not
-        if os.path.exists("./image/" + uploaded_file.name) is True :
-            os.remove("image/" + uploaded_file.name)
+                st.success("Upload Successfull")
+            # Deleting the file:
+            # check if file exists or not
+            if os.path.exists("./image/" + uploaded_file.name) is True :
+                os.remove("image/" + uploaded_file.name)
 
-    st.image(Image.open(uploaded_file))
+    st.image(uploaded_files, use_column_width=True) #To display the uploaded images on the dashboard
 
     # print("the image url :" + image_base_url + str(uploaded_file.name))
     # for tag in description.tags:
