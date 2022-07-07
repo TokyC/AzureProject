@@ -33,14 +33,15 @@ blob_service_client = BlobServiceClient.from_connection_string(
 container_client = blob_service_client.get_container_client("container-azure-project")
 
 # Connection to mySQL server
-cnx = pymysql.connect(user="toky@tokyserver", password="Projet@Azure", host="tokyserver.mysql.database.azure.com", port=3306, database="azureproj")
+cnx = pymysql.connect(user="toky@tokyserver", password="Projet@Azure", host="tokyserver.mysql.database.azure.com",
+                      port=3306, database="azureproj")
 ##############################################################
 # The title
 st.title("Search engine for images with Azure infra")
 
 # Users can search image from here
 search = st.text_input('Search your image here')
-if search is not None:
+if search is not None :
     # res =container_client.list_blobs()
     # ro = blob_service_client.find_blobs_by_tags("\"tag1\"='chat'")
     # print(ro)
@@ -48,8 +49,6 @@ if search is not None:
     #     print(r.name)
     #     print("here")
     st.write("text you typed : " + search)
-
-
 
 # Users can upload images from here
 uploaded_file = st.file_uploader("Upload an image", accept_multiple_files=False)
@@ -69,33 +68,33 @@ if uploaded_file is not None :
             # upload the image in a the blob
             res = blob_client.upload_blob(image_stream, overwrite=True)
 
-
-
         with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
             description = computervision_client.tag_image_in_stream(image_stream, language='fr')
             blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
                                                               blob=str(uploaded_file.name))
-            for tag in description.tags:
+            for tag in description.tags :
                 tags.append(tag.name)
-            # blob_client.set_blob_metadata(metadata={'tag' : 'test metadata','tag2':'metada2'})
+                # blob_client.set_blob_metadata(metadata={'tag' : 'test metadata','tag2':'metada2'})
                 print("adding tag :" + tag.name)
-                sql_query = f"INSERT INTO images (url,tags) VALUES ('{image_base_url + uploaded_file.name}', '{tag.name}');"
+                sql_query = f"BEGIN" \
+                            f" IF NOT EXISTS (SELECT * FROM images WHERE url='{image_base_url + uploaded_file.name}' AND tags = '{tag.name}')" \
+                            f"BEGIN " \
+                            f"INSERT INTO images (url,tags) VALUES ('{image_base_url + uploaded_file.name}', '{tag.name}');" \
+                            f"END END"
                 print(sql_query)
-                with cnx:
-                    with cnx.cursor() as cursor:
-                        cursor.execute(sql_query)
-                        cnx.commit()
-                        print("Image uploaded")
-                        st.success("Upload Successfull")
+
+                with cnx.cursor() as cursor :
+                    cursor.execute(sql_query)
+                    cnx.commit()
+                    print("tag uploaded")
+
+            st.success("Upload Successfull")
         # Deleting the file:
         # check if file exists or not
         if os.path.exists("./image/" + uploaded_file.name) is True :
             os.remove("image/" + uploaded_file.name)
 
-
-
     st.image(Image.open(uploaded_file))
-
 
     # print("the image url :" + image_base_url + str(uploaded_file.name))
     # for tag in description.tags:
