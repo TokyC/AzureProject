@@ -41,28 +41,29 @@ st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootst
 
 st.markdown("""
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #70f1ff;">
-  <img src="https://www.groupe-pomona.fr/sites/default/files/reseau/Logo%20PassionFroid.png">
+  <img src="https://www.groupe-pomona.fr/sites/default/files/reseau/Logo%20PassionFroid.png" style='max-width:120px'/>
 </nav>
-""", unsafe_allow_html=True)# The title
-st.title("Search engine for images with Azure infra")
+""", unsafe_allow_html=True) #navigation bar
+
+# The title
+st.title("Moteur de recherche PassionFroid")
 
 # Users can search image from here
-search = st.text_input('Search your image here')
-if search is not None :
+search = st.text_input('Rechercher ici')
     # res =container_client.list_blobs()
     # ro = blob_service_client.find_blobs_by_tags("\"tag1\"='chat'")
     # print(ro)
     # for r in ro:
     #     print(r.name)
     #     print("here")
-    st.write("text you typed : " + search)
+st.write("Vous avez cherché : " + search)
 
 # Users can upload images from here
-uploaded_files = st.file_uploader("Upload an image",type=['jpg','jpeg','png'],help="Charger une image au format jpg,jpeg,png", accept_multiple_files=True)
+uploaded_files = st.file_uploader("Charger une image ici",type=['jpg','jpeg','png'],help="Charger une image au format jpg,jpeg,png", accept_multiple_files=True)
 
 if uploaded_files is not None :
     tags = []
-    if st.button("Click to upload") :
+    if st.button("Cliquer pour charger l'image") :
         # for file in uploaded_file :
         # print(file)
         for uploaded_file in uploaded_files: #Here begin the multiple images management
@@ -92,13 +93,23 @@ if uploaded_files is not None :
                         cnx.commit()
                         print("tag uploaded")
 
-                st.success("Upload Successfull")
+                st.success("Chargement réussi")
             # Deleting the file:
             # check if file exists or not
             if os.path.exists("./image/" + uploaded_file.name) is True :
                 os.remove("image/" + uploaded_file.name)
 
-    st.image(uploaded_files, use_column_width=True) #To display the uploaded images on the dashboard
+#Searched term images display
+if search is not None :
+    with cnx.cursor() as cursor:
+        sql_image_display_query = """SELECT * from images where tags = %s"""
+        cursor.execute(sql_image_display_query, (search,))
+        record = cursor.fetchall()
+        for row in record:
+            st.image(row[1])
+
+#Uploaded images display
+st.image(uploaded_files, use_column_width=True) #To display the uploaded images on the dashboard
 
     # print("the image url :" + image_base_url + str(uploaded_file.name))
     # for tag in description.tags:
