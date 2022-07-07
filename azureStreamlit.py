@@ -49,7 +49,13 @@ st.markdown("""
 st.title("Moteur de recherche PassionFroid")
 
 # Users can search image from here
-search = st.text_input('Rechercher ici')
+#search = st.text_input('Rechercher ici',)
+with cnx.cursor() as cursor:
+    sql_image_display_query = """SELECT DISTINCT tags from images"""
+    cursor.execute(sql_image_display_query)
+    record = cursor.fetchall()
+
+search = st.selectbox('Rechercher ici',[row[0] for row in record])
     # res =container_client.list_blobs()
     # ro = blob_service_client.find_blobs_by_tags("\"tag1\"='chat'")
     # print(ro)
