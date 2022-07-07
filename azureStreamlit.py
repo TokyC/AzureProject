@@ -76,11 +76,7 @@ if uploaded_file is not None :
                 tags.append(tag.name)
                 # blob_client.set_blob_metadata(metadata={'tag' : 'test metadata','tag2':'metada2'})
                 print("adding tag :" + tag.name)
-                sql_query = f"BEGIN" \
-                            f" IF NOT EXISTS (SELECT * FROM images WHERE url='{image_base_url + uploaded_file.name}' AND tags = '{tag.name}')" \
-                            f"BEGIN " \
-                            f"INSERT INTO images (url,tags) VALUES ('{image_base_url + uploaded_file.name}', '{tag.name}');" \
-                            f"END END"
+                sql_query = f"INSERT INTO images (url,tags) VALUES ('{image_base_url + uploaded_file.name}', '{tag.name}');"
                 print(sql_query)
 
                 with cnx.cursor() as cursor :
