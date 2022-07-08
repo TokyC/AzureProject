@@ -68,34 +68,29 @@ col1, col2 = st.columns(2)
 with st.sidebar:
     st.title("Option de recherche")
     nb_images = st.slider("Number of images to show", 1,30)
+    type_recherche = st.radio("Choisissez le type de recherche :", ["Recherche par tag", "Recherche Textuel"])
 
 
-search = col1.selectbox('Rechercher ici', [row[0] for row in record])
-if search is not None:
-    st.write("Vous avez cherché : " + search)
+
+if type_recherche == "Recherche par tag":
+    search = st.selectbox('Rechercher ici', [row[0] for row in record])
+    if search is not None:
+        st.write("Vous avez cherché : " + search)
+
+else:
+    text_search = st.text_input("Tapez la recherche")
+    if text_search is not None:
+        tokens = text_search.split(" ")
+        print(tokens)
+        all_response = []
+    for token in tokens:
+        sql_image_display_query = f"SELECT DISTINCT url FROM images WHERE tags='{token}'"
+        with cnx.cursor() as cursor :
+            cursor.execute(sql_image_display_query)
+            rec = cursor.fetchall()
+            all_response.append(rec)
 
 
-text_search = col2.text_input("Tapez la recherche")
-if text_search is not None:
-    tokens = text_search.split(" ")
-    print(tokens)
-    all_response = []
-for token in tokens:
-    sql_image_display_query = f"SELECT DISTINCT url FROM images WHERE tags='{token}'"
-    with cnx.cursor() as cursor :
-        cursor.execute(sql_image_display_query)
-        rec = cursor.fetchall()
-        all_response.append(rec)
-
-counter = 0
-print(nb_images)
-for rec in all_response :
-    for row in rec:
-        col2.image(row[0])
-        if counter == nb_images:
-            break
-        else:
-            counter+=1
 
 # Users can upload images from here
 uploaded_files = st.file_uploader("Charger une image ici", type=['jpg', 'jpeg', 'png'],
@@ -136,20 +131,38 @@ if uploaded_files is not None :
             # check if file exists or not
             if os.path.exists("./image/" + uploaded_file.name) is True :
                 os.remove("image/" + uploaded_file.name)
+    # Uploaded images display
+    st.image(uploaded_files, use_column_width=True)  # To display the uploaded images on the dashboard
 
 
-# Searched term images display
-if search is not None :
-    with cnx.cursor() as cursor :
-        sql_image_display_query = """SELECT DISTINCT url from images where tags = %s"""
-        cursor.execute(sql_image_display_query, (search,))
-        record = cursor.fetchall()
-        for row in record :
-            col1.image(row[0])
-            # print(row[1])
 
-# Uploaded images display
-st.image(uploaded_files, use_column_width=True)  # To display the uploaded images on the dashboard
+if type_recherche == "Recherche par tag":
+    counter = 1
+    # Searched term images display
+    if search is not None :
+        with cnx.cursor() as cursor :
+            sql_image_display_query = """SELECT DISTINCT url from images where tags = %s"""
+            cursor.execute(sql_image_display_query, (search,))
+            record = cursor.fetchall()
+            for row in record :
+                st.image(row[0])
+                if counter == nb_images :
+                    break
+                else :
+                    counter += 1
+                # print(row[1])
+else:
+
+    counter = 1
+    print(nb_images)
+    for rec in all_response :
+        for row in rec:
+            st.image(row[0])
+            if counter == nb_images:
+                break
+            else:
+                counter+=1
+
 
 # print("the image url :" + image_base_url + str(uploaded_file.name))
 # for tag in description.tags:
