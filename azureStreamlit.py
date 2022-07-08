@@ -63,17 +63,12 @@ with cnx.cursor() as cursor :
     record = cursor.fetchall()
     record =  (" ",) + record
 
-<<<<<<< HEAD
-search = st.selectbox('Rechercher ici',[row[0] for row in record],0) #text search with suggestion
-    # res =container_client.list_blobs()
-    # ro = blob_service_client.find_blobs_by_tags("\"tag1\"='chat'")
-    # print(ro)
-    # for r in ro:
-    #     print(r.name)
-    #     print("here")
-st.write("Vous avez cherché : " + search)
-=======
 col1, col2 = st.columns(2)
+
+with st.sidebar:
+    st.title("Option de recherche")
+    nb_images = st.slider("Number of images to show", 1,30)
+
 
 search = col1.selectbox('Rechercher ici', [row[0] for row in record])
 if search is not None:
@@ -92,11 +87,15 @@ for token in tokens:
         rec = cursor.fetchall()
         all_response.append(rec)
 
-    for rec in all_response :
-        for row in rec:
-            col2.image(row[0])
-
->>>>>>> 91e8a699c204108a2083aec1c93c46cecf756b3a
+counter = 0
+print(nb_images)
+for rec in all_response :
+    for row in rec:
+        col2.image(row[0])
+        if counter == nb_images:
+            break
+        else:
+            counter+=1
 
 # Users can upload images from here
 uploaded_files = st.file_uploader("Charger une image ici", type=['jpg', 'jpeg', 'png'],

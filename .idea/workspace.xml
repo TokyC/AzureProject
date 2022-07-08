@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="99847595-a168-489e-a484-e1f22eb8ad3d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+    <list default="true" id="99847595-a168-489e-a484-e1f22eb8ad3d" name="Changes" comment="add textual search">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/azureStreamlit.py" beforeDir="false" afterPath="$PROJECT_DIR$/azureStreamlit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/test.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,8 +71,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1657207747925</updated>
-      <workItem from="1657270974478" duration="9164000" />
+      <workItem from="1657270974478" duration="10132000" />
     </task>
+    <task id="LOCAL-00001" summary="add textual search">
+      <created>1657281091319</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1657281091319</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -91,6 +96,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add textual search" />
+    <option name="LAST_COMMIT_MESSAGE" value="add textual search" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/projetAzure$projetAzure.coverage" NAME="projetAzure Coverage Results" MODIFIED="1657190067351" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
