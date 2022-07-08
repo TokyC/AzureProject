@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99847595-a168-489e-a484-e1f22eb8ad3d" name="Changes" comment="Dernière version du projet">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/azureStreamlit.py" beforeDir="false" afterPath="$PROJECT_DIR$/azureStreamlit.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +73,7 @@
       <updated>1657207747925</updated>
       <workItem from="1657270974478" duration="11202000" />
       <workItem from="1657283387716" duration="2164000" />
-      <workItem from="1657286288490" duration="1318000" />
+      <workItem from="1657286288490" duration="1476000" />
     </task>
     <task id="LOCAL-00001" summary="add textual search">
       <created>1657281091319</created>
@@ -111,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657287480776</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Dernière version du projet">
+      <created>1657287626959</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1657287626959</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

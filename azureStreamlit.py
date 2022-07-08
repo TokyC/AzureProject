@@ -1,10 +1,6 @@
-import time
-
 import pymysql.cursors
 import streamlit as st
 import os
-import io
-from PIL import Image
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.storage.blob import BlobServiceClient
 from msrest.authentication import CognitiveServicesCredentials
@@ -12,9 +8,6 @@ from msrest.authentication import CognitiveServicesCredentials
 # UserName : toky : MOT DE PASSE SQL : Projet@Azure
 
 # https://tokyazureproject.scm.azurewebsites.net:443/TokyAzureProject.git
-
-# credential for blob
-# credential = DefaultAzureCredential()
 
 # Retrieve the storage blob service URL, which is of the form
 # https://stockagetoky.blob.core.windows.net/
@@ -41,6 +34,7 @@ container_client = blob_service_client.get_container_client("container-azure-pro
 cnx = pymysql.connect(user="toky@tokyserver", password="Projet@Azure", host="tokyserver.mysql.database.azure.com",
                       port=3306, database="azureproj")
 
+
 ##############################################################
 st.markdown(
     '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">',
@@ -56,7 +50,6 @@ st.markdown("""
 st.title("Moteur de recherche PassionFroid")
 
 # Users can search image from here
-# search = st.text_input('Rechercher ici',)
 with cnx.cursor() as cursor :
     sql_image_display_query = """SELECT DISTINCT tags from images"""
     cursor.execute(sql_image_display_query)
@@ -98,12 +91,9 @@ uploaded_files = st.file_uploader("Charger une image ici",type=['jpg','jpeg','pn
 if uploaded_files is not None :
     tags = []
     if st.button("Cliquer pour charger l'image") :
-        # for file in uploaded_file :
-        # print(file)
         for uploaded_file in uploaded_files: #Here begin the multiple images management
             with open(os.path.join("./image/", uploaded_file.name), "wb") as f :
                 f.write(uploaded_file.getbuffer())
-            # description = computervision_client.tag_image_in_stream("./image/" + str(uploaded_file.name) + ".png")
             with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
                 # Create a blob client using the local file name as the name for the blob
                 blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
@@ -128,10 +118,12 @@ if uploaded_files is not None :
                         print("tag uploaded")
 
                 st.success("Chargement réussi")
+
             # Deleting the file:
             # check if file exists or not
             if os.path.exists("./image/" + uploaded_file.name) is True :
                 os.remove("image/" + uploaded_file.name)
+
     # Uploaded images display
     st.image(uploaded_files, use_column_width=True)  # To display the uploaded images on the dashboard
 
@@ -163,35 +155,3 @@ else:
                 break
             else:
                 counter+=1
-
-
-# print("the image url :" + image_base_url + str(uploaded_file.name))
-# for tag in description.tags:
-#     st.write(tag.name)
-
-# if st.button("Upload Image de fruits") :
-#     files = os.listdir("./image/random_files_files")
-#     for img in files:
-#          img_name = "random-" + str(img)
-#         with open("./image/random_files_files/" + img, "rb") as image_stream :
-#             # Create a blob client using the local file name as the name for the blob
-#             blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME,
-#                                                               blob=img_name)
-#             # upload the image in a the blob
-#             res = blob_client.upload_blob(image_stream, overwrite=True)
-#         with open("./image/random_files_files/" + img, "rb") as image_stream :
-#             description = computervision_client.tag_image_in_stream(image_stream, language='fr')
-#
-#             for tag in description.tags :
-#                 # blob_client.set_blob_metadata(metadata={'tag' : 'test metadata','tag2':'metada2'})
-#                 print("adding tag :" + tag.name)
-#                 sql_query = f"INSERT INTO images (url,tags) VALUES ('{image_base_url + img_name}', '{tag.name}');"
-#                 print(sql_query)
-#
-#                 with cnx.cursor() as cursor :
-#                     cursor.execute(sql_query)
-#                     cnx.commit()
-#                     print("tag uploaded")
-#         time.sleep(6)
-#
-#     st.success("Chargement réussi")
