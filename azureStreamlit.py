@@ -93,15 +93,16 @@ else:
 
 
 # Users can upload images from here
-uploaded_files = st.file_uploader("Charger une image ici", type=['jpg', 'jpeg', 'png'],
-                                  help="Charger une image au format jpg,jpeg,png", accept_multiple_files=True)
+uploaded_files = st.file_uploader("Charger une image ici",type=['jpg','jpeg','png'],help="Charger une image au format jpg,jpeg,png", accept_multiple_files=True)
 
 if uploaded_files is not None :
     tags = []
     if st.button("Cliquer pour charger l'image") :
         # for file in uploaded_file :
         # print(file)
-        for uploaded_file in uploaded_files :  # Here begin the multiple images management
+        for uploaded_file in uploaded_files: #Here begin the multiple images management
+            with open(os.path.join("./image/", uploaded_file.name), "wb") as f :
+                f.write(uploaded_file.getbuffer())
             # description = computervision_client.tag_image_in_stream("./image/" + str(uploaded_file.name) + ".png")
             with open("./image/" + str(uploaded_file.name), "rb") as image_stream :
                 # Create a blob client using the local file name as the name for the blob
