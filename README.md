@@ -2,6 +2,7 @@
 
 Ce repo est le résultat de notre semaine thématique **Azure**. 
 L'objectif du projet était de construire une application en utilisant **Azure** Comme cloud provider.
+Nous avons travaillé ensemble avec @Maathess pour le réaliser.
 
 Commencer par installerles dépendance dans le requirements.txt:
 - *pip install -r requirements.txt*
@@ -20,3 +21,6 @@ Pour build un container dans azure :
 ### Le lien du **trello** pour le projet : 
 - https://trello.com/invite/b/emJnEMCn/401dcb9b815bb37fdbbfea8f9229d2ea/projet-azure-pomona-passionfroid
 
+Par : 
+- KOTHANDAPANI Maathess
+- ANDRIAMAHEFA Toky Cedric
