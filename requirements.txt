@@ -1,0 +1,8 @@
+streamlit~=1.10.0
+azure.cognitiveservices.vision.computervision
+azure.storage.blob
+pymysql
+flask~=2.0.3
+pymysql~=1.0.2
+pillow~=9.2.0
+msrest~=0.7.1
