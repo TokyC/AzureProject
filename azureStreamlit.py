@@ -54,8 +54,9 @@ with cnx.cursor() as cursor:
     sql_image_display_query = """SELECT DISTINCT tags from images"""
     cursor.execute(sql_image_display_query)
     record = cursor.fetchall()
+    record =  (" ",) + record
 
-search = st.selectbox('Rechercher ici',[row[0] for row in record])
+search = st.selectbox('Rechercher ici',[row[0] for row in record],0) #text search with suggestion
     # res =container_client.list_blobs()
     # ro = blob_service_client.find_blobs_by_tags("\"tag1\"='chat'")
     # print(ro)
