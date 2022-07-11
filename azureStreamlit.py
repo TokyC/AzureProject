@@ -5,8 +5,6 @@ from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.storage.blob import BlobServiceClient
 from msrest.authentication import CognitiveServicesCredentials
 
-# UserName : toky : MOT DE PASSE SQL : Projet@Azure
-
 # https://tokyazureproject.scm.azurewebsites.net:443/TokyAzureProject.git
 
 # Retrieve the storage blob service URL, which is of the form
@@ -19,20 +17,20 @@ image_base_url = "https://stockagetoky.blob.core.windows.net/container-azure-pro
 CONTAINER_NAME = "container-azure-project"
 
 # Cognitive key
-COG_KEY = '7ced5790185f491c8a751ba945e2a5a4'
-COG_ENDPOINT = 'https://ress-compvis.cognitiveservices.azure.com/'
+COG_KEY = <YourKey>
+COG_ENDPOINT = <YourEndpoint>
 
 # Get a client for the computer vision service
 computervision_client = ComputerVisionClient(COG_ENDPOINT, CognitiveServicesCredentials(COG_KEY))
 
 # Settings for blob
 blob_service_client = BlobServiceClient.from_connection_string(
-    "DefaultEndpointsProtocol=https;AccountName=stockagetoky;AccountKey=+rXyX74rnGr7avYqBCG2KaMWzALsV4augUb4yWUzdEj7UuRVVCxQzfcgAye7AVWjZE6y/RZJ9jjT+AStAsLbwQ==;EndpointSuffix=core.windows.net")
+    "DefaultEndpointsProtocol=https;AccountName=<yourAccount>;AccountKey=<YourAccountKey>;EndpointSuffix=core.windows.net")
 container_client = blob_service_client.get_container_client("container-azure-project")
 
 # Connection to mySQL server
-cnx = pymysql.connect(user="toky@tokyserver", password="Projet@Azure", host="tokyserver.mysql.database.azure.com",
-                      port=3306, database="azureproj")
+cnx = pymysql.connect(user=<Username>, password=<YourUsername>, host=<HOST>,
+                      port=3306, database=<DATABASE>)
 
 
 ##############################################################
